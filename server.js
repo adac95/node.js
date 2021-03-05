@@ -1,17 +1,24 @@
 // DE AQUI CORRE LA APLICACION
 
 const express = require('express');
-const bodyParser = require('body-parser');
+const app = express();
+const server = require('http').Server(app);
 
-// const router = require('./components/message/network');
+const bodyParser = require('body-parser');
+const socket = require('./socket');
+const connect = require('./db');
 const router = require('./components/network/routes');
 
-let app = express();
+connect();
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(router);
+
+socket.connect(server);
+
 router(app);
 
 app.use('/app', express.static('public'));
 
-app.listen(3000, console.log('corriendo servidor en puerto 3000'));
+server.listen(3000, console.log('corriendo servidor en puerto 3000'));
